@@ -1,6 +1,15 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
+import { cn } from "@/lib/utils";
+import {ReactQueryProvider} from "@/provider/react-query-provider";
+import {ThemeProvider} from "next-themes";
+
+import {Suspense} from "react";
+import ErrorBoundary from "@/provider/error-boundary";
+import {LoadingFallback} from "@/components/organism/loading-fallback";
+
+const jetbrainsMono = JetBrains_Mono({subsets:['latin'],variable:'--font-mono'});
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -24,10 +33,26 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      lang="id"
+      className={cn("h-full", "antialiased", geistSans.variable, geistMono.variable, "font-mono", jetbrainsMono.variable)}
+      suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+      <ReactQueryProvider>
+        <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+            >
+          <ErrorBoundary>
+            <Suspense fallback={<LoadingFallback />}>
+              {children}
+            </Suspense>
+          </ErrorBoundary>
+        </ThemeProvider>
+      </ReactQueryProvider>
+      </body>
     </html>
   );
 }
