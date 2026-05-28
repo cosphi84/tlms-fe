@@ -1,8 +1,6 @@
 "use client";
 
-// Error severity levels
-
-import {ApiRequestError} from "@/interface/axios-interface";
+import {ApiRequestError} from "@/lib/axios";
 
 export enum ErrorSeverity {
     LOW = "low",
@@ -51,7 +49,7 @@ export interface ErrorContext {
 class ErrorLogger {
     private logs: ErrorLogEntry[] = [];
     private maxLogs = 100; // Keep last 100 errors in memory
-    private sessionId: string;
+    private readonly sessionId: string;
 
     constructor() {
         this.sessionId = this.generateSessionId();
@@ -59,7 +57,7 @@ class ErrorLogger {
     }
 
     private generateSessionId(): string {
-        return `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+        return `session_${Date.now()}_${Math.random().toString(36).slice(2, 11)}`;
     }
 
     private setupGlobalErrorHandlers(): void {
@@ -106,34 +104,36 @@ class ErrorLogger {
         const errorId = this.generateErrorId();
         const timestamp = new Date().toISOString();
 
-        let message: string;
+        let message: string = "Unknown error occurred"; // ✅ initialized — no uninitialized risk
         let stack: string | undefined;
-        let category = context?.category || ErrorCategory.UNKNOWN;
-        let severity = context?.severity || ErrorSeverity.MEDIUM;
+        let category = context?.category ?? ErrorCategory.UNKNOWN;
+        let severity = context?.severity ?? ErrorSeverity.MEDIUM;
         let url: string | undefined;
 
         // Process different error types
         if (typeof error === "string") {
             message = error;
+
         } else if (this.isApiRequestError(error)) {
             message = error.message;
             url = error.url;
             category = ErrorCategory.API;
 
-            // Determine severity based on status code
-            if (error.status !== null && error.status >= 500) {
+            // ✅ Fix: narrow to number first before using >= operator
+            const statusCode = typeof error.status === "number" ? error.status : null;
+
+            if (statusCode !== null && statusCode >= 500) {
                 severity = ErrorSeverity.HIGH;
-            } else if (error.status === 401 || error.status === 403) {
+            } else if (statusCode === 401 || statusCode === 403) {
                 severity = ErrorSeverity.MEDIUM;
                 category = ErrorCategory.AUTHENTICATION;
-            } else if (error.status !== null && error.status >= 400) {
+            } else if (statusCode !== null && statusCode >= 400) {
                 severity = ErrorSeverity.LOW;
             }
+
         } else if (error instanceof Error) {
             message = error.message;
             stack = error.stack;
-        } else {
-            message = "Unknown error occurred";
         }
 
         const logEntry: ErrorLogEntry = {
@@ -144,28 +144,24 @@ class ErrorLogger {
             category,
             severity,
             url,
-            userAgent:
-                typeof navigator !== "undefined" ? navigator.userAgent : "Unknown",
+            userAgent: typeof navigator !== "undefined" ? navigator.userAgent : "Unknown",
             userId: context?.userId,
             sessionId: this.sessionId,
             additionalData: context?.additionalData,
-            resolved: false
+            resolved: false,
         };
 
-        // Add to logs array
         this.logs.unshift(logEntry);
-
-        // Keep only the last maxLogs entries
         if (this.logs.length > this.maxLogs) {
             this.logs = this.logs.slice(0, this.maxLogs);
         }
 
-        // Console logging based on severity
         this.consoleLog(logEntry);
 
-        // Send to external logging service in production
         if (process.env.NODE_ENV === "production") {
-            this.sendToExternalService(logEntry);
+            this.sendToExternalService(logEntry).catch((err) => {
+                console.error("Failed to send log to external service:", err);
+            });
         }
 
         return errorId;
@@ -178,13 +174,10 @@ class ErrorLogger {
             category: ErrorCategory.API,
             additionalData: {
                 ...context?.additionalData,
-                isNetworkError: (error as Record<string, unknown>)
-                    .isNetworkError as boolean,
-                isServerError: (error as Record<string, unknown>)
-                    .isServerError as boolean,
-                isClientError: (error as Record<string, unknown>)
-                    .isClientError as boolean,
-                isAuthError: (error as Record<string, unknown>).isAuthError as boolean,
+                isNetworkError: error.isNetworkError,
+                isServerError: error.isServerError,
+                isClientError: error.isClientError,
+                isAuthError: error.isAuthError,
                 status: error.status
             }
         });
@@ -290,16 +283,17 @@ class ErrorLogger {
     }
 
     private generateErrorId(): string {
-        return `error_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+        return `error_${Date.now()}_${Math.random().toString(36).slice(2, 11)}`;
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    private isApiRequestError(error: any): error is ApiRequestError {
+    private isApiRequestError(error: unknown): error is ApiRequestError {
         return (
-            error &&
+            error !== null &&
             typeof error === "object" &&
-            "status" in error &&
-            "message" in error
+            "message" in error &&
+            "isNetworkError" in error &&
+            "isServerError" in error &&
+            "timestamp" in error
         );
     }
 

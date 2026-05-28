@@ -1,191 +1,121 @@
-"use client"
+"use client";
+import {
+    QueryCache,
+    QueryClient,
+    QueryClientProvider,
+    MutationCache,
+} from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import {type PropsWithChildren, useState} from "react";
+import { toast } from "sonner";
+import { Toaster } from "@/components/atoms/sonner";
+import { type ApiRequestError } from "@/lib/axios";
+import { errorLogger } from "@/lib/error-logger";
 
-import {ApiRequestError} from "@/interface/axios-interface";
-import errorLogger from "@/lib/error-logger";
-import {toast, Toaster} from "sonner";
-import { MutationCache, QueryCache, QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import {PropsWithChildren} from "react";
+// ─── Helpers ────────────────────────────────────────────────────────────────
 
-const handleQueryError = (error: unknown) => {
-    console.error("Query error", error)
-
-    if (error && typeof error === "object" && "message" in error && typeof error.message === "string") {
-        const apiError = error as ApiRequestError;
-
-        if (apiError.status === 401 || apiError.status === 403) {
-            return;
-        }
-
-        // Create API error object for logging
-        const errorObj = error as unknown as {
-            message: string;
-            status?: number;
-            config?: { url?: string };
-            response?: {
-                status: number;
-                statusText: string;
-                data?: { statusCode: number; message: string };
-            };
-        };
-
-        const logApiError: ApiRequestError = {
-            url: errorObj.config?.url || undefined,
-            message: errorObj.message,
-            status: typeof errorObj.status === "number" ? errorObj.status : null,
-            response: {
-                data: {
-                    statusCode: errorObj.response?.status || 0,
-                    message: errorObj.message
-                },
-                status: errorObj.response?.status || 0,
-                statusText: errorObj.response?.statusText || "Unknown Error"
-            }
-        };
-
-        // Log API errors (excluding auth errors for queries)
-        if (apiError.status !== 401 && apiError.status !== 403) {
-            errorLogger.logApiError(logApiError, {
-                component: "ReactQuery",
-                action: "query_error"
-            });
-        }
-
-        // Show user-friendly error message
-        const errorMessage =
-            apiError.message || "An error occurred on load data";
-        toast.error(errorMessage, {
-            description:
-                "Please try again, or contact system administrator if errors occured.",
-            action: {
-                label: "Try again",
-                onClick: () => window.location.reload()
-            }
-        });
-    }else{
-        toast.error("Error", {
-            description: "Unknown error occurred on load data",
-            duration: 5000
-        });
-    }
-}
-
-const handleMutationError = (error: unknown) => {
-    console.error("Mutation Error:", error);
-
-    if (error && typeof error === "object" && "message" in error) {
-        const errorObj = error as unknown as {
-            message: string;
-            status?: number;
-            config?: { url?: string };
-            response?: {
-                status: number;
-                statusText: string;
-                data?: { statusCode: number; message: string };
-            };
-        };
-
-        const apiError: ApiRequestError = {
-            url: errorObj.config?.url || undefined,
-            message: errorObj.message,
-            status: typeof errorObj.status === "number" ? errorObj.status : null,
-            response: {
-                data: {
-                    statusCode: errorObj.response?.status || 0,
-                    message: errorObj.message
-                },
-                status: errorObj.response?.status || 0,
-                statusText: errorObj.response?.statusText || "Unknown Error"
-            }
-        };
-
-        // Log mutation errors
-        errorLogger.logApiError(apiError, {
-            component: "ReactQuery",
-            action: "mutation_error"
-        });
-
-        // Show user-friendly error message
-        const errorMessage =
-            apiError.message || "Terjadi kesalahan saat menyimpan data";
-        toast.error(errorMessage, {
-            description:
-                "Silakan coba lagi atau hubungi administrator jika masalah berlanjut.",
-            action: {
-                label: "Coba Lagi",
-                onClick: () => {
-                    // This would typically retry the mutation
-                    // Implementation depends on the specific mutation
-                }
-            }
-        });
-
-    }else{
-        toast.error("Error", {
-            description: "Terjadi kesalahan yang tidak terduga",
-            duration: 5000
-        });
-    }
-};
-
-const queryClient = new QueryClient({
-    defaultOptions: {
-        queries: {
-            refetchOnWindowFocus: false,
-            refetchInterval: false,
-            retry: (failureCount, error) => {
-                // Don't retry on 4xx errors (client errors)
-                if (error && typeof error === "object" && "status" in error) {
-                    const status = (error as unknown as { status?: number }).status;
-                    if (status && status >= 400 && status < 500) {
-                        return false;
-                    }
-                }
-                // Retry up to 3 times for other errors
-                return failureCount < 3;
-            },
-            retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
-            refetchIntervalInBackground: false,
-            gcTime: 1000 * 60 * 15,
-            refetchOnMount: false,
-            refetchOnReconnect: false
-        },
-        mutations: {
-            retry: (failureCount, error) => {
-                // Don't retry mutations on client errors
-                if (error && typeof error === "object" && "status" in error) {
-                    const status = (error as unknown as { status?: number }).status;
-                    if (status && status >= 400 && status < 500) {
-                        return false;
-                    }
-                }
-                // Retry once for server errors
-                return failureCount < 1;
-            },
-            retryDelay: 1000
-        }
-    },
-    queryCache: new QueryCache({
-        onError: handleQueryError
-    }),
-    mutationCache: new MutationCache({
-        onError: handleMutationError
-    })
-});
-
-function ReactQueryDevtools(props: { initialIsOpen: boolean, buttonPosition: string, position: string }) {
-    return null;
-}
-
-
-export function ReactQueryProvider({ children }: PropsWithChildren) {
+function isApiRequestError(error: unknown): error is ApiRequestError {
     return (
-        <QueryClientProvider client={queryClient}>
+        error !== null &&
+        typeof error === "object" &&
+        "message" in error &&
+        "isNetworkError" in error &&
+        "isServerError" in error &&
+        "timestamp" in error
+    );
+}
+
+function toApiRequestError(error: unknown): ApiRequestError | null {
+    return isApiRequestError(error) ? error : null;
+}
+
+function showErrorToast(message: string, onRetry?: () => void) {
+    toast.error(message, {
+        description: "Silakan coba lagi atau hubungi administrator jika masalah berlanjut.",
+        ...(onRetry && {
+            action: { label: "Coba Lagi", onClick: onRetry },
+        }),
+    });
+}
+
+// ─── Error Handlers ─────────────────────────────────────────────────────────
+
+function handleQueryError(error: unknown) {
+    const apiError = toApiRequestError(error);
+    if (!apiError) {
+        toast.error("Error", { description: "Terjadi kesalahan yang tidak terduga", duration: 5000 });
+        return;
+    }
+
+    // Auth errors are handled by the auth layer — skip toast
+    if (apiError.status === 401 || apiError.status === 403) return;
+
+    errorLogger.logApiError(apiError, { component: "ReactQuery", action: "query_error" });
+
+    showErrorToast(
+        apiError.message ?? "Terjadi kesalahan saat memuat data",
+        () => window.location.reload()
+    );
+}
+
+function handleMutationError(error: unknown) {
+    const apiError = toApiRequestError(error);
+    if (!apiError) {
+        toast.error("Error", { description: "Terjadi kesalahan yang tidak terduga", duration: 5000 });
+        return;
+    }
+
+    errorLogger.logApiError(apiError, { component: "ReactQuery", action: "mutation_error" });
+
+    // Note: mutation retry is context-dependent; caller should handle it
+    showErrorToast(apiError.message ?? "Terjadi kesalahan saat menyimpan data");
+}
+
+// ─── Retry Policy ────────────────────────────────────────────────────────────
+
+function isClientError(error: unknown): boolean {
+    if (error && typeof error === "object" && "status" in error) {
+        const status = (error as { status?: number }).status;
+        return typeof status === "number" && status >= 400 && status < 500;
+    }
+    return false;
+}
+
+// ─── Factory (avoids SSR singleton leak) ────────────────────────────────────
+
+function makeQueryClient() {
+    return new QueryClient({
+        defaultOptions: {
+            queries: {
+                refetchOnWindowFocus: false,
+                refetchOnMount: false,
+                refetchOnReconnect: false,
+                refetchInterval: false,
+                refetchIntervalInBackground: false,
+                gcTime: 1000 * 60 * 15,
+                retry: (failureCount, error) => !isClientError(error) && failureCount < 3,
+                retryDelay: (attempt) => Math.min(1000 * 2 ** attempt, 30_000),
+            },
+            mutations: {
+                retry: (failureCount, error) => !isClientError(error) && failureCount < 1,
+                retryDelay: 1_000,
+            },
+        },
+        queryCache: new QueryCache({ onError: handleQueryError }),
+        mutationCache: new MutationCache({ onError: handleMutationError }),
+    });
+}
+
+// ─── Provider ────────────────────────────────────────────────────────────────
+export function ReactQueryProvider({ children }: PropsWithChildren) {
+    // Lazy initializer — runs once on mount, never re-runs
+    // State value (not .current) is safe to read during render
+    const [client] = useState(() => makeQueryClient());
+
+    return (
+        <QueryClientProvider client={client}>
             {children}
-            <ReactQueryDevtools
-                initialIsOpen={false}
-                buttonPosition="bottom-right"
-                position="bottom"
-            />
+            <ReactQueryDevtools initialIsOpen={false} buttonPosition="bottom-right" position="bottom" />
             <Toaster />
         </QueryClientProvider>
     );

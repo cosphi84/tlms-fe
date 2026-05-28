@@ -5,10 +5,30 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="484a5508-321a-4b97-87cc-9dbfbd4a9672" name="Changes" comment="init project">
+      <change afterPath="$PROJECT_DIR$/src/app/(dashboard)/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/error.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/global-error.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/login/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/organism/form-login.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/helpers/auth-helper.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/helpers/format-helper.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/lib/axios.ts-old" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/lib/jwt.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/proxy.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/queries/auth-query.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/queries/url-query.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/schemas/login-schema.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/types/query-interface.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/types/user-interface.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components.json" beforeDir="false" afterPath="$PROJECT_DIR$/components.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/not-found.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/not-found.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lib/axios.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/axios.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lib/error-logger.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/error-logger.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/provider/error-boundary.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/provider/error-boundary.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/provider/react-query-provider.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/provider/react-query-provider.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -27,62 +47,65 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.0" />
-      <entry key="MS500" value="1.0" />
-      <entry key="S2" value="1.0" />
-      <entry key="S5" value="1.0" />
-      <entry key="S10" value="1.0" />
-      <entry key="S30" value="1.0000027195593773" />
-      <entry key="S60" value="1.0033851466354757" />
-      <entry key="M2" value="1.1656297259343844" />
-      <entry key="M5" value="6.629088643958142" />
-      <entry key="M10" value="30.710095072049647" />
-      <entry key="M15" value="59.51917802583691" />
-      <entry key="M30" value="143.11242710709672" />
-      <entry key="H1" value="287.3391880466837" />
-      <entry key="H2" value="521.9119315285177" />
-      <entry key="H4" value="868.0614579240923" />
-      <entry key="D1" value="2014.3705257332708" />
-      <entry key="W1" value="2544.5686968630494" />
-    </decayedCancelled>
-    <decayedSelected>
       <entry key="MS100" value="0.0" />
       <entry key="MS500" value="0.0" />
-      <entry key="S2" value="5.431269584068949E-142" />
-      <entry key="S5" value="3.1186062427111687E-57" />
-      <entry key="S10" value="5.584448265237286E-29" />
-      <entry key="S30" value="3.822347254896895E-10" />
-      <entry key="S60" value="1.9629172129073637E-5" />
-      <entry key="M2" value="0.005018744288927902" />
-      <entry key="M5" value="0.3111092539785612" />
-      <entry key="M10" value="2.314548978520396" />
-      <entry key="M15" value="5.653567315489716" />
-      <entry key="M30" value="19.333530964531615" />
-      <entry key="H1" value="53.05327947594205" />
-      <entry key="H2" value="117.9097293528984" />
-      <entry key="H4" value="214.7176757351786" />
-      <entry key="D1" value="556.718343848725" />
-      <entry key="W1" value="722.2446400130692" />
+      <entry key="S2" value="4.4299023562420255E-97" />
+      <entry key="S5" value="4.301913544612834E-39" />
+      <entry key="S10" value="9.760706396246885E-20" />
+      <entry key="S30" value="2.3522539616088685E-6" />
+      <entry key="S60" value="0.008576926840365765" />
+      <entry key="M2" value="0.6086041782313703" />
+      <entry key="M5" value="9.652472882138728" />
+      <entry key="M10" value="27.68070890770751" />
+      <entry key="M15" value="42.16744222352089" />
+      <entry key="M30" value="78.55240050756149" />
+      <entry key="H1" value="167.26753752440973" />
+      <entry key="H2" value="375.6752454211194" />
+      <entry key="H4" value="741.1920961201841" />
+      <entry key="D1" value="2043.5028610518764" />
+      <entry key="W1" value="2669.873264888918" />
+    </decayedCancelled>
+    <decayedSelected>
+      <entry key="MS100" value="1.000000000561498" />
+      <entry key="MS500" value="1.0141211363554856" />
+      <entry key="S2" value="1.3447207386475715" />
+      <entry key="S5" value="1.6531109492488747" />
+      <entry key="S10" value="1.8081528006812047" />
+      <entry key="S30" value="1.9314607627975326" />
+      <entry key="S60" value="1.9661445874399406" />
+      <entry key="M2" value="2.0694739468674834" />
+      <entry key="M5" value="3.4921071689821166" />
+      <entry key="M10" value="6.7049804560148685" />
+      <entry key="M15" value="9.633417549810972" />
+      <entry key="M30" value="17.547496652648178" />
+      <entry key="H1" value="37.19089918735455" />
+      <entry key="H2" value="89.15995791198371" />
+      <entry key="H4" value="186.3201569610236" />
+      <entry key="D1" value="564.9142310830287" />
+      <entry key="W1" value="757.0562832202538" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="0.6830201283771977" />
-      <entry key="MS500" value="0.9265880618903709" />
-      <entry key="S2" value="0.9811189749983187" />
-      <entry key="S5" value="0.9924043746858185" />
-      <entry key="S10" value="0.9961949481330542" />
-      <entry key="S30" value="0.998732756671973" />
-      <entry key="S60" value="1.002767210507964" />
-      <entry key="M2" value="1.1700641453685705" />
-      <entry key="M5" value="6.934317341093908" />
-      <entry key="M10" value="33.00558426123091" />
-      <entry key="M15" value="65.1436878367118" />
-      <entry key="M30" value="162.4001585851126" />
-      <entry key="H1" value="340.3334857734943" />
-      <entry key="H2" value="639.7571370841549" />
-      <entry key="H4" value="1082.72037941053" />
-      <entry key="D1" value="2571.064839615427" />
-      <entry key="W1" value="3266.8089762058817" />
+      <entry key="MS100" value="5.096972164547099E-5" />
+      <entry key="MS500" value="0.13942792790374625" />
+      <entry key="S2" value="0.7843932134299124" />
+      <entry key="S5" value="1.3178629220868738" />
+      <entry key="S10" value="1.6110340931291802" />
+      <entry key="S30" value="1.857667477298754" />
+      <entry key="S60" value="1.9366666788488462" />
+      <entry key="M2" value="2.6576284275646582" />
+      <entry key="M5" value="13.126916972895392" />
+      <entry key="M10" value="34.36405386271991" />
+      <entry key="M15" value="51.77839079227616" />
+      <entry key="M30" value="96.07730200678323" />
+      <entry key="H1" value="204.4295343040385" />
+      <entry key="H2" value="464.79423773226455" />
+      <entry key="H4" value="927.4658097741606" />
+      <entry key="D1" value="2608.3934748324914" />
+      <entry key="W1" value="3426.9250841340477" />
     </decayedShown>
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 3,
@@ -93,35 +116,35 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.MCP Project settings loaded": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
-    "ToolWindow.shadcn.ShowToolbar": "false",
-    "codeWithMe.voiceChat.enabledByDefault": "false",
-    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
-    "git-widget-placeholder": "main",
-    "javascript.preferred.runtime.type.id": "node",
-    "js.debugger.nextJs.config.created.client": "true",
-    "js.debugger.nextJs.config.created.server": "true",
-    "junie.onboarding.icon.badge.shown": "true",
-    "kronk.content.tree.expanded.paths": "|App Router",
-    "last_opened_file_path": "/home/risam/Documents/Projects/TLMS/tlms-fe",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "preferences.pluginManager",
-    "to.speed.mode.migration.done": "true",
-    "ts.external.directory.path": "/home/risam/Documents/Projects/TLMS/tlms-fe/node_modules/typescript/lib",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;ToolWindow.shadcn.ShowToolbar&quot;: &quot;false&quot;,
+    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
+    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;javascript.preferred.runtime.type.id&quot;: &quot;node&quot;,
+    &quot;js.debugger.nextJs.config.created.client&quot;: &quot;true&quot;,
+    &quot;js.debugger.nextJs.config.created.server&quot;: &quot;true&quot;,
+    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
+    &quot;kronk.content.tree.expanded.paths&quot;: &quot;|App Router&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/risam/Documents/Projects/TLMS/tlms-fe&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;/home/risam/Documents/Projects/TLMS/tlms-fe/node_modules/typescript/lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src" />
@@ -178,7 +201,7 @@
       <workItem from="1779765649424" duration="2907000" />
       <workItem from="1779771941387" duration="572000" />
       <workItem from="1779772561264" duration="4461000" />
-      <workItem from="1779929902740" duration="3061000" />
+      <workItem from="1779929902740" duration="11591000" />
     </task>
     <task id="LOCAL-00001" summary="init project">
       <option name="closed" value="true" />
@@ -205,11 +228,6 @@
           <url>file://$PROJECT_DIR$/providers/error-boundary.tsx</url>
           <line>70</line>
           <option name="timeStamp" value="1" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/src/lib/error-logger.ts</url>
-          <line>2</line>
-          <option name="timeStamp" value="2" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
