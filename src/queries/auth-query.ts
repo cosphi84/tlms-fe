@@ -36,7 +36,7 @@ interface UseGetAuthOptions<TCache, TError, TData>
 
 async function loginRequest(variables: LoginArg): Promise<LoginResponse> {
     const axios = createBrowserInstance(false);
-    return axios.post<LoginResponse>("/login", variables);
+    return axios.post<LoginResponse>("/auth", variables);
 }
 
 function handleLoginSuccess(data: LoginResponse, queryClient: QueryClient): void {
