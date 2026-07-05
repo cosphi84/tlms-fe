@@ -5,11 +5,16 @@ import axios, {
 } from "axios";
 import { v4 as uuid4 } from "uuid";
 import CookieBrowser from "js-cookie";
+import {
+    COOKIE_NAMES,
+    clearAuthCookies,
+    rotateAccessToken,
+} from "@/helpers/auth-helper";
+import type { RefreshResponse } from "@/types/user-interface";
 
 // ─── Config ──────────────────────────────────────────────────────────────────
 
 const apiHost = process.env["NEXT_PUBLIC_TLMS_BACKEND_API"];
-const cookieName = { token: "tlms_token", user: "tlms_user" } as const;
 
 export const axiosMultiPartConfig: AxiosRequestConfig = {
     headers: { "Content-Type": "multipart/form-data" },
@@ -17,10 +22,11 @@ export const axiosMultiPartConfig: AxiosRequestConfig = {
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
-// Extend Axios config to support request metadata (safe, no cast needed)
+// Extend Axios config to support request metadata and retry flag
 declare module "axios" {
     interface InternalAxiosRequestConfig {
         metadata?: { startTime: number };
+        _retry?: boolean;
     }
 }
 
@@ -46,7 +52,7 @@ export type Instance = ReturnType<typeof createInstance>;
 
 export function getErrorMessage(
     error: AxiosError<{ message: string; statusCode: number; fields?: string[] }>
-): Pick<ApiRequestError, "url" | "message" | "status"> {  // ← explicit Pick
+): Pick<ApiRequestError, "url" | "message" | "status"> {
     if (error.response) {
         const { status, statusText, data } = error.response;
         return {
@@ -72,11 +78,11 @@ export function getErrorMessage(
 function buildApiRequestError(
     error: AxiosError<{ message: string; statusCode: number }>
 ): ApiRequestError {
-    const base = getErrorMessage(error);   // Pick<ApiRequestError, ...>
+    const base = getErrorMessage(error);
     const httpStatus = error.response?.status ?? 0;
 
     return {
-        ...base,                             // url, message, status
+        ...base,
         response: {
             data: { statusCode: httpStatus, message: base.message },
             status: httpStatus,
@@ -88,6 +94,48 @@ function buildApiRequestError(
         isAuthError: httpStatus === 401 || httpStatus === 403,
         timestamp: new Date().toISOString(),
     };
+}
+
+// ─── Silent Refresh (token rotation) ─────────────────────────────────────────
+//
+// Pattern: mutex + queue.
+// Only ONE refresh call is in-flight at a time. Subsequent 401s are queued and
+// resolved/rejected after the single refresh resolves.
+//
+
+let isRefreshing = false;
+let failedQueue: Array<{
+    resolve: (token: string) => void;
+    reject: (err: unknown) => void;
+}> = [];
+
+function processQueue(error: unknown, token: string | null) {
+    failedQueue.forEach(({ resolve, reject }) => {
+        if (token) resolve(token);
+        else reject(error);
+    });
+    failedQueue = [];
+}
+
+/** Call BE refresh endpoint directly (no interceptor loop). */
+async function doRefresh(): Promise<string> {
+    const refreshToken = CookieBrowser.get(COOKIE_NAMES.refreshToken);
+    if (!refreshToken) throw new Error("No refresh token");
+
+    const res = await axios.post<RefreshResponse>(
+        `${apiHost}auth/refresh`,
+        {},
+        {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${refreshToken}`,
+            },
+        }
+    );
+
+    const { access_token, refresh_token } = res.data;
+    rotateAccessToken(access_token, refresh_token);
+    return access_token;
 }
 
 // ─── Instance Factory ────────────────────────────────────────────────────────
@@ -109,6 +157,12 @@ function createInstance(token?: string) {
     instance.interceptors.request.use(
         (config: InternalAxiosRequestConfig) => {
             config.metadata = { startTime: Date.now() };
+
+            // Always attach latest access token from cookie (handles rotated tokens)
+            const latestToken = CookieBrowser.get(COOKIE_NAMES.accessToken) ?? token;
+            if (latestToken) {
+                config.headers["Authorization"] = `Bearer ${latestToken}`;
+            }
 
             if (process.env.NODE_ENV === "development") {
                 console.log("→ API Request:", {
@@ -137,7 +191,52 @@ function createInstance(token?: string) {
             }
             return response.data;
         },
-        (error: AxiosError<{ message: string; statusCode: number }>) => {
+        async (error: AxiosError<{ message: string; statusCode: number }>) => {
+            const originalConfig = error.config;
+
+            // ── Silent token refresh on 401 ──────────────────────────────────
+            if (
+                error.response?.status === 401 &&
+                originalConfig &&
+                !originalConfig._retry
+            ) {
+                if (isRefreshing) {
+                    // Queue this request until the in-flight refresh resolves
+                    return new Promise<string>((resolve, reject) => {
+                        failedQueue.push({ resolve, reject });
+                    })
+                        .then((newToken) => {
+                            originalConfig.headers["Authorization"] = `Bearer ${newToken}`;
+                            return instance(originalConfig);
+                        })
+                        .catch((err) => Promise.reject(buildApiRequestError(err)));
+                }
+
+                originalConfig._retry = true;
+                isRefreshing = true;
+
+                try {
+                    const newToken = await doRefresh();
+                    processQueue(null, newToken);
+                    originalConfig.headers["Authorization"] = `Bearer ${newToken}`;
+                    return instance(originalConfig);
+                } catch (refreshError) {
+                    processQueue(refreshError, null);
+                    // Refresh failed → clear cookies and redirect to login
+                    clearAuthCookies();
+                    if (typeof window !== "undefined") {
+                        const prev = encodeURIComponent(
+                            window.location.pathname + window.location.search
+                        );
+                        window.location.href = `/login?prev=${prev}`;
+                    }
+                    return Promise.reject(buildApiRequestError(refreshError as AxiosError<{ message: string; statusCode: number }>));
+                } finally {
+                    isRefreshing = false;
+                }
+            }
+
+            // ── All other errors ─────────────────────────────────────────────
             const apiError = buildApiRequestError(error);
 
             console.error("← API Error:", {
@@ -189,10 +288,13 @@ function createInstance(token?: string) {
 
 /**
  * Browser-side instance.
- * @param withToken - set true to attach the stored JWT (default: true)
+ * Always reads the latest access token from cookie — handles rotated tokens
+ * transparently. Pass withToken=false for unauthenticated requests (e.g. login).
  */
 export function createBrowserInstance(withToken = true) {
-    const token = withToken ? CookieBrowser.get(cookieName.token) : undefined;
+    const token = withToken
+        ? CookieBrowser.get(COOKIE_NAMES.accessToken)
+        : undefined;
     return createInstance(token);
 }
 

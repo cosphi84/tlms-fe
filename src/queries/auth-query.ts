@@ -13,9 +13,14 @@ import {
     UseQueryResult,
 } from "@tanstack/react-query";
 import { type LoginArg, type LoginResponse, type UserProps } from "@/types/user-interface";
-import { clearAuthCookies, setAuthCookies } from "@/helpers/auth-helper";
+import {
+    clearAuthCookies,
+    setAuthCookies,
+    COOKIE_NAMES,
+} from "@/helpers/auth-helper";
+import { parseCookieUser } from "@/lib/jwt";
 import { getQueryString } from "@/queries/url-query";
-import { type Query } from "@/types/query-interface"; // ✅ import Query type
+import { type Query } from "@/types/query-interface";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -29,7 +34,7 @@ const QUERY_KEYS = {
 interface UseGetAuthOptions<TCache, TError, TData>
     extends UseQueryOptions<TCache, TError, TData> {
     redirectToLogin?: boolean;
-    query?: Query; // ✅ was Record<string, unknown> — now matches getQueryString param
+    query?: Query;
 }
 
 // ─── Auth API ─────────────────────────────────────────────────────────────────
@@ -59,11 +64,12 @@ export function useLogout(currentPath?: string) {
     const queryClient = useQueryClient();
     return useCallback(
         (callback?: () => void) => {
-            if (!Cookies.get("tlms_token")) return;
+            if (!Cookies.get(COOKIE_NAMES.accessToken) && !Cookies.get(COOKIE_NAMES.refreshToken)) return;
 
             localStorage.clear();
             clearAuthCookies();
-            void queryClient.invalidateQueries({ queryKey: QUERY_KEYS.login });
+            void queryClient.invalidateQueries({ queryKey: QUERY_KEYS.auth });
+            void queryClient.clear();
 
             const redirectTarget =
                 currentPath ??
@@ -76,6 +82,14 @@ export function useLogout(currentPath?: string) {
     );
 }
 
+/**
+ * Returns the currently logged-in user.
+ *
+ * Strategy:
+ *  1. Read the tlms_user cookie (set at login, updated on token rotation).
+ *  2. If cookie is missing/corrupt, fall back to GET /user with access token.
+ *  3. On any auth error and redirectToLogin=true, call logout().
+ */
 export function useGetAuth<TData = UserProps>(
     options?: Partial<UseGetAuthOptions<UserProps, ApiRequestError, TData>>
 ): UseQueryResult<TData, ApiRequestError> {
@@ -86,9 +100,22 @@ export function useGetAuth<TData = UserProps>(
     const result = useQuery<UserProps, ApiRequestError, TData>({
         queryKey: QUERY_KEYS.auth,
         queryFn: async () => {
+            // Fast path: decode from cookie (no network round-trip)
+            const cookieUser = parseCookieUser(Cookies.get(COOKIE_NAMES.user));
+            if (cookieUser) {
+                // Cast CookieUser to UserProps (they share the same shape from BE)
+                return cookieUser as unknown as UserProps;
+            }
+
+            // Fallback: fetch from BE (e.g., cookie was manually cleared)
             const axios = createBrowserInstance();
             const qs = query ? `?${getQueryString(query)}` : "";
             return axios.get<UserProps>(`/user${qs}`);
+        },
+        // Don't retry on auth errors — they go straight to logout
+        retry: (failureCount, error) => {
+            if (error.isAuthError) return false;
+            return failureCount < 2;
         },
         ...restOptions,
     });
