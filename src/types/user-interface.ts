@@ -11,7 +11,8 @@ export type LoginArg = {
  * user   → stored in tlms_user cookie (base64 encoded)
  */
 export type LoginResponse = {
-    token: string;
+    access_token: string;
+    refresh_token: string;
     user: CookieUser;
 };
 
@@ -23,8 +24,7 @@ export type CookieUser = {
     id: number;
     email: string;
     name: string;
-    role: string;
-    office: string;
+    office: bigint;
 };
 
 // ─── Full User (from GET /user) ───────────────────────────────────────────────
@@ -34,20 +34,17 @@ export type CookieUser = {
  * Used by useGetAuth hook.
  */
 export interface UserProps {
-    user_id: number;
-    email: string;
-    name: string;
-    password?: string;
-    image?: string;
-    office_id: number;
-    office?: string;
-    role_id: string;
-    role: string;
-    is_active: boolean;
-    failed_login_attempts: number;
-    locked_until?: Date;
-    last_login_at?: Date;
-    last_login_from?: string;
-    created_at: Date;
-    updated_at?: Date;
+  user_id: bigint;
+  email: string;
+  name: string;
+  image?: string;
+  office_id: bigint;
+  office?: object;
+  is_active: boolean;
+  failed_login_attempts: number;
+  locked_until?: Date;
+  last_login_at?: Date;
+  last_login_from?: string;
+  created_at: Date;
+  updated_at?: Date;
 }

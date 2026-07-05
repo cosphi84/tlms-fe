@@ -32,7 +32,7 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
 
     const onSubmit = (values: LoginFormValues) => {  // ✅ not async, mutate not mutateAsync
         login(values, {
-            onSuccess: () => {
+             onSuccess: () => {
                 const prev = searchParams.get("prev");
                 const hash = window.location.hash;  // hash not in searchParams, window is fine here
                 const target = prev
@@ -75,7 +75,7 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
                         id="frm-login"
                         onSubmit={form.handleSubmit(onSubmit)}
                         className="space-y-8"
-                        noValidate  // ✅ let Zod handle validation, not the browser
+                        noValidate
                     >
                         <FieldGroup>
                             <Controller
