@@ -1,62 +1,54 @@
-// ── Pagination ────────────────────────────────────────────────
 import { OfficeType } from "@/schemas/office-schema";
 
-export interface PaginationRequest {
-  page?: number;
-  limit?: number;
-  search?: string;
-  sorted_by?: string;
-  sort_dir?: "asc" | "desc";
-}
+// ── NullableInt64 ─────────────────────────────────────────────
 
-export interface PaginationResponse<T> {
-  data: T[];
-  page: number;
-  limit: number;
-  total_rows: number;
-  total_pages: number;
+export interface NullableInt64 {
+  Int64: number;
+  Valid: boolean;
 }
 
 // ── Office ────────────────────────────────────────────────────
+
 export interface OfficeResponse {
   id: number;
-  parent_id?: {
-    Int64: number;
-    Valid: boolean;
-  };
-
+  parent_id: NullableInt64;
   code: string;
   name: string;
   type: string;
   depth: number;
-
   lft: number;
   rgt: number;
-
   children_count: number;
+
+  created_by?: number;
+
+  created_at: string;
+  updated_at: string;
+  deleted_at: string | null;
 }
 
-// For <Select> / combobox dropdowns
+// dropdown
+
 export interface SelectOfficeResponses {
-  id: number;
+  id: number | null;
   label: string;
 }
 
-// ── Requests ──────────────────────────────────────────────────
+// requests
+
 export interface CreateOfficePayload {
-  parent_id: number; // number on wire — converted from form string
-  code: string; // max 10 chars
-  name: string; // max 100 chars
+  parent_id: number | null;
+  code: string;
+  name: string;
   type: OfficeType;
 }
 
-// ── API Response Wrappers ─────────────────────────────────────
-// Handlers that wrap in { data: ... }
+// wrappers
+
 export interface DataWrapper<T> {
   data: T;
 }
 
-// Handlers that return { message: ... }
 export interface MessageResponse {
   message: string;
 }

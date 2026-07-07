@@ -33,7 +33,7 @@ export const MenuData = {
         },
         {
           title: "Stock Tools",
-          url: "/stock"
+          url: "/stocks"
         }
       ]
     },
@@ -49,7 +49,7 @@ export const MenuData = {
       icon: Database,
       items: [
         { title: "Offices", url: "/offices" },
-        { title: "Storage Loc", url: "/sloc" },
+        { title: "Storage Loc", url: "/slocs" },
         { title: "Users", url: "/users" },
       ]
     }

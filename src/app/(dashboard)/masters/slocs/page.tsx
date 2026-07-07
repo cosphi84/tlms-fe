@@ -9,6 +9,7 @@ import {
   CardTitle
 } from "@/components/atoms/card";
 import { Button } from "@/components/atoms/button";
+import { StorageLocTable } from "@/components/organism/storage-loc-table";
 
 export default function StorageLocPage() {
   return (
@@ -32,7 +33,7 @@ export default function StorageLocPage() {
               <div>All Storage Locations</div>
               <div className={"flex justify-between"}>
                 <Button variant="link" className="flex flex-1">
-                  <Link href={"sloc/new"} className="flex">
+                  <Link href={"slocs/new"} className="flex">
                     <PlusIcon className="mr-2" />
                     <span className="font-semibold">New Sloc</span>
                   </Link>
@@ -42,7 +43,7 @@ export default function StorageLocPage() {
           </CardHeader>
 
           <CardContent>
-            Storage Loc
+            <StorageLocTable />
           </CardContent>
         </Card>
       </div>

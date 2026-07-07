@@ -5,11 +5,30 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="484a5508-321a-4b97-87cc-9dbfbd4a9672" name="Changes" comment="init project">
-      <change afterPath="$PROJECT_DIR$/src/interface/axios.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/(dashboard)/masters/slocs/new/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/(dashboard)/masters/slocs/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/atoms/edit-button.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/cells/storage-table-skeleton.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/organism/storage-loc-table.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/interface/general-interface.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/queries/storage-location-query.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/schemas/storage-loc-schema.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/types/storage-loc-interface.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/ShadcnHelperSettings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/ShadcnHelperSettings.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/helpers/auth-helper.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/helpers/auth-helper.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/queries/auth-query.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/queries/auth-query.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/types/user-interface.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/types/user-interface.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/(dashboard)/masters/offices/new/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(dashboard)/masters/offices/new/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/(dashboard)/masters/offices/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(dashboard)/masters/offices/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/cells/select-parent-office.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/cells/select-parent-office.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/organism/form-new-office.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/organism/form-new-office.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/organism/form-new-sloc.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/organism/form-new-sloc.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/organism/office-tree-row.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/organism/office-tree-row.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/organism/office-tree-table.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/organism/office-tree-table.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/configs/menu.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/configs/menu.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/interface/axios.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lib/office-tree.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/office-tree.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/queries/office-query.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/queries/office-query.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/schemas/office-schema.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schemas/office-schema.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/types/office-interface.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/types/office-interface.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -17,7 +36,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="93" />
+    <option name="cachedIndexableFilesCount" value="105" />
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -28,61 +47,61 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.0000000000023146" />
-      <entry key="MS500" value="1.0068220141718747" />
-      <entry key="S2" value="1.4822232241544715" />
-      <entry key="S5" value="2.25227690933026" />
-      <entry key="S10" value="2.888617264295029" />
-      <entry key="S30" value="4.2664413468248785" />
-      <entry key="S60" value="6.146642040711018" />
-      <entry key="M2" value="9.481146573134353" />
-      <entry key="M5" value="18.14706692755885" />
-      <entry key="M10" value="33.590615740222155" />
-      <entry key="M15" value="48.04010331944468" />
-      <entry key="M30" value="79.34490367451815" />
-      <entry key="H1" value="115.265511623106" />
-      <entry key="H2" value="181.10255863059135" />
-      <entry key="H4" value="393.5661549708795" />
-      <entry key="D1" value="2073.75725698283" />
-      <entry key="W1" value="3245.1900159448055" />
+      <entry key="MS100" value="1.0" />
+      <entry key="MS500" value="1.0" />
+      <entry key="S2" value="1.0000001185914769" />
+      <entry key="S5" value="1.002793586164327" />
+      <entry key="S10" value="1.1100741989310692" />
+      <entry key="S30" value="2.6262888463649805" />
+      <entry key="S60" value="4.409492949222816" />
+      <entry key="M2" value="6.893156565033305" />
+      <entry key="M5" value="16.50795709376125" />
+      <entry key="M10" value="35.75563930435323" />
+      <entry key="M15" value="52.75686591359043" />
+      <entry key="M30" value="96.36120719740377" />
+      <entry key="H1" value="177.09238333116195" />
+      <entry key="H2" value="315.4149253530993" />
+      <entry key="H4" value="553.9265234705914" />
+      <entry key="D1" value="2332.450142047656" />
+      <entry key="W1" value="3794.7390559215814" />
     </decayedCancelled>
     <decayedSelected>
-      <entry key="MS100" value="6.00001722359901E-70" />
-      <entry key="MS500" value="1.4309699038836713E-14" />
-      <entry key="S2" value="3.4773908639384126E-4" />
-      <entry key="S5" value="0.046380557620418886" />
-      <entry key="S10" value="0.27492491207328124" />
-      <entry key="S30" value="1.211149966380637" />
-      <entry key="S60" value="3.083016841802893" />
-      <entry key="M2" value="7.594695427541952" />
-      <entry key="M5" value="16.753449170256317" />
-      <entry key="M10" value="25.293534793454764" />
-      <entry key="M15" value="30.920046847715657" />
-      <entry key="M30" value="41.11455515864429" />
-      <entry key="H1" value="52.52353188002613" />
-      <entry key="H2" value="74.10563766683133" />
-      <entry key="H4" value="140.04819312039461" />
-      <entry key="D1" value="638.5358335836731" />
-      <entry key="W1" value="991.4860778597193" />
+      <entry key="MS100" value="1.5278488807737508E-146" />
+      <entry key="MS500" value="6.948790489857255E-30" />
+      <entry key="S2" value="7.704488068543833E-8" />
+      <entry key="S5" value="0.002598072498825828" />
+      <entry key="S10" value="0.08738074659684383" />
+      <entry key="S30" value="0.921115188997604" />
+      <entry key="S60" value="1.6782391469071225" />
+      <entry key="M2" value="2.519176133948069" />
+      <entry key="M5" value="6.374597200458107" />
+      <entry key="M10" value="14.654387651152824" />
+      <entry key="M15" value="21.642538802641596" />
+      <entry key="M30" value="40.2283106360147" />
+      <entry key="H1" value="77.88584267051789" />
+      <entry key="H2" value="142.64991358965358" />
+      <entry key="H4" value="241.16806163154993" />
+      <entry key="D1" value="810.7549534387831" />
+      <entry key="W1" value="1259.9229259135845" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="0.6925547340555221" />
-      <entry key="MS500" value="0.9330280707633513" />
-      <entry key="S2" value="1.4064210231257215" />
-      <entry key="S5" value="2.2231260379467916" />
-      <entry key="S10" value="3.084701463996657" />
-      <entry key="S30" value="5.397557196611706" />
-      <entry key="S60" value="9.1353573889639" />
-      <entry key="M2" value="16.963024210266706" />
-      <entry key="M5" value="34.795628330559374" />
-      <entry key="M10" value="58.796888441335064" />
-      <entry key="M15" value="78.88445282473012" />
-      <entry key="M30" value="120.4041021607804" />
-      <entry key="H1" value="167.75061172929068" />
-      <entry key="H2" value="255.1783770522531" />
-      <entry key="H4" value="533.5834566646854" />
-      <entry key="D1" value="2712.267591535648" />
-      <entry key="W1" value="4236.6704265037" />
+      <entry key="MS100" value="0.0021225290283712066" />
+      <entry key="MS500" value="0.29199184865327943" />
+      <entry key="S2" value="0.7350937885235411" />
+      <entry key="S5" value="0.8886760659810444" />
+      <entry key="S10" value="1.122745004468289" />
+      <entry key="S30" value="3.4720852714981074" />
+      <entry key="S60" value="6.025704477696679" />
+      <entry key="M2" value="9.364645828164955" />
+      <entry key="M5" value="22.8269733287088" />
+      <entry key="M10" value="50.3368690214559" />
+      <entry key="M15" value="74.32327872742631" />
+      <entry key="M30" value="136.51550897766217" />
+      <entry key="H1" value="254.9066587882668" />
+      <entry key="H2" value="458.0001678839084" />
+      <entry key="H4" value="795.0400671307507" />
+      <entry key="D1" value="3143.173301502234" />
+      <entry key="W1" value="5054.654872917756" />
     </decayedShown>
   </component>
   <component name="ProblemsViewState">
@@ -108,13 +127,13 @@
     &quot;ToolWindow.shadcn.ShowToolbar&quot;: &quot;false&quot;,
     &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
     &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;feat/refresh-token&quot;,
     &quot;javascript.preferred.runtime.type.id&quot;: &quot;node&quot;,
     &quot;js.debugger.nextJs.config.created.client&quot;: &quot;true&quot;,
     &quot;js.debugger.nextJs.config.created.server&quot;: &quot;true&quot;,
     &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
-    &quot;kronk.content.tree.expanded.paths&quot;: &quot;|App Router&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/risam/Documents/Projects/TLMS/tlms-fe&quot;,
+    &quot;kronk.content.tree.expanded.paths&quot;: &quot;&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/risam/Documents/Projects/TLMS/tlms-fe/src/app/(dashboard)/masters/slocs&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -128,6 +147,9 @@
   }
 }</component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/app/(dashboard)/masters/slocs" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src/types" />
       <recent name="$PROJECT_DIR$/src" />
@@ -200,6 +222,12 @@
       <workItem from="1783219807836" duration="3293000" />
       <workItem from="1783227963207" duration="5757000" />
       <workItem from="1783249894630" duration="693000" />
+      <workItem from="1783254688691" duration="806000" />
+      <workItem from="1783255863460" duration="673000" />
+      <workItem from="1783318832824" duration="286000" />
+      <workItem from="1783319205855" duration="10996000" />
+      <workItem from="1783405697801" duration="9574000" />
+      <workItem from="1783416107719" duration="346000" />
     </task>
     <task id="LOCAL-00001" summary="init project">
       <option name="closed" value="true" />
@@ -226,6 +254,11 @@
           <url>file://$PROJECT_DIR$/providers/error-boundary.tsx</url>
           <line>70</line>
           <option name="timeStamp" value="1" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/src/schemas/office-schema.ts</url>
+          <line>21</line>
+          <option name="timeStamp" value="2" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

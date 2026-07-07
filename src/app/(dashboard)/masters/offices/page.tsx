@@ -1,6 +1,6 @@
 import { DashboardWrapper } from "@/components/organism/dashboard-wrapper";
 import Link from "next/link";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, PlusIcon } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -9,6 +9,7 @@ import {
   CardTitle
 } from "@/components/atoms/card";
 import { OfficeTreeTable } from "@/components/organism/office-tree-table";
+import { Button } from "@/components/atoms/button";
 
 export default function OfficePage() {
   return (
@@ -28,7 +29,17 @@ export default function OfficePage() {
           <CardHeader>
             <CardTitle>Offices</CardTitle>
 
-            <CardDescription>Office hierarchy</CardDescription>
+            <CardDescription className={"flex justify-between"}>
+              <div>Office hierarchy</div>
+              <div className={"flex justify-between"}>
+                <Button variant="link" className="flex flex-1">
+                  <Link href={"/masters/offices/new"} className="flex">
+                    <PlusIcon className="mr-2" />
+                    <span className="font-semibold">New Office</span>
+                  </Link>
+                </Button>
+              </div>
+            </CardDescription>
           </CardHeader>
 
           <CardContent>
